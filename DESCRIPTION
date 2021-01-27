@@ -1,0 +1,15 @@
+Package: KINNET
+Type: Package
+Title: Kinase INteraction NETwork Generation
+Version: 0.1.0.9000
+Authors@R: c(
+    person(given = c("Ali", "Sajid"),
+           family = "Imami",
+           role = c("aut", "cre"),
+           email = "Ali.Sajid.Imami@gmail.com",
+           comment = c(ORCID = "0000-0003-3684-3539")))
+Description: This package provides the functionality to process PamGene's PamChip
+    Data Output and generate kinase interaction networks from that.
+License: GPL (>= 3)
+Encoding: UTF-8
+LazyData: true
