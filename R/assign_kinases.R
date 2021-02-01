@@ -211,11 +211,11 @@ assign_kinases <- function(network, chiptype = "PTK") {
   }
 
   if (chiptype == "PTK") {
-    annotation <- JustinKinomeModelling::ptk_annotation
-    interactome <- JustinKinomeModelling::ptk_interactome
+    annotation <- ptk_annotation
+    interactome <- ptk_interactome
   } else if (chiptype == "STK") {
-    annotation <- JustinKinomeModelling::stk_annotation
-    interactome <- JustinKinomeModelling::stk_interactome
+    annotation <- stk_annotation
+    interactome <- stk_interactome
   }
 
 

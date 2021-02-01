@@ -93,9 +93,9 @@ update_probability_matrix <- function(chiptype, assignment_df) {
   }
 
   if (chiptype == "PTK") {
-    annotation_posterior <- JustinKinomeModelling::ptk_probability_matrix
+    annotation_posterior <- ptk_probability_matrix
   } else if (chiptype == "STK") {
-    annotation_posterior <- JustinKinomeModelling::stk_probability_matrix
+    annotation_posterior <- stk_probability_matrix
   }
 
 
