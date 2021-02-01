@@ -1,4 +1,4 @@
-#' Generate a bayes net model
+#' Generate a bayes net mode
 #'
 #' @param expression tbl_df. A tibble with the activity data from the kinome chip.
 #' @param iterations numeric. Number of iterations to run the mode.

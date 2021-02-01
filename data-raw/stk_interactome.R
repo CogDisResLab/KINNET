@@ -1,4 +1,4 @@
-## code to prepare `ptk_interactome` dataset goes here
+## code to prepare `stk_interactome` dataset goes here
 
 library(tidyverse)
 library(devtools)
@@ -16,6 +16,6 @@ interactome_na_to <- interactome$to %>%
 interactome_na_from <- interactome$from %>%
   tibble(from = ., to = NA)
 
-ptk_interactome <- bind_rows(interactome, interactome_na_to, interactome_na_from)
+stk_interactome <- bind_rows(interactome, interactome_na_to, interactome_na_from)
 
-usethis::use_data(ptk_interactome, overwrite = TRUE)
+usethis::use_data(stk_interactome, overwrite = TRUE)
