@@ -1,7 +1,9 @@
 ^renv$
 ^renv\.lock$
-^.*\.Rproj$
+^justin-kinome-modelling\.Rproj$
 ^\.Rproj\.user$
-^README\.Rmd$
 ^data-raw$
+^kinome_annotation$
+^kinome_data$
+^README\.Rmd$
 ^\.travis\.yml$
