@@ -54,6 +54,7 @@ Collate:
     'make_model.R'
     'pamchip_data.R'
     'pamchip_data_ptk.R'
+    'probability_matrix.R'
     'ptk_methods.R'
     'render_kinase_graph.R'
     'subset_data.R'
