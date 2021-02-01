@@ -67,7 +67,7 @@ generate_posterior_probability_df <- function(annotated_df) {
   posterior_probs <- annotated_df %>%
     dplyr::select(.data$ID, .data$Gene_Symbol) %>%
     dplyr::rename(peptide = .data$ID,
-                  kinase = .data$Gene_Symbol) %>%
+           kinase = .data$Gene_Symbol) %>%
     purrr::pmap_dfr(~ posterior(..1, ..2, probability_df))
 
   posterior_probs
@@ -83,7 +83,6 @@ generate_posterior_probability_df <- function(annotated_df) {
 #'
 #' @import dplyr
 #' @importFrom rlang .data
-#' @importFrom utils data
 #'
 #' @examples
 #' TRUE
@@ -94,18 +93,18 @@ update_probability_matrix <- function(chiptype, assignment_df) {
   }
 
   if (chiptype == "PTK") {
-    annotation_posterior <- utils::data("ptk_annotation", envir = environment())
+    annotation_posterior <- JustinKinomeModelling::ptk_probability_matrix
   } else if (chiptype == "STK") {
-    annotation_posterior <- utils::data("stk_annotation", envir = environment())
+    annotation_posterior <- JustinKinomeModelling::stk_probability_matrix
   }
 
 
   assignment_posterior <- generate_posterior_probability_df(assignment_df)
 
   updated_df <- dplyr::inner_join(assignment_posterior,
-                                  annotation_posterior,
-                                  by = c("peptide", "kinase"),
-                                  suffix = c(".assigned", ".reference")) %>%
+                           annotation_posterior,
+                           by = c("peptide", "kinase"),
+                           suffix = c(".assigned", ".reference")) %>%
     mutate(
       foldchange = .data$posterior.assigned/.data$posterior.reference,
       log.assigned = log10(.data$posterior.assigned),

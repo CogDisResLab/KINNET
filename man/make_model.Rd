@@ -2,7 +2,7 @@
 % Please edit documentation in R/make_model.R
 \name{make_model}
 \alias{make_model}
-\title{Generate a bayes net model}
+\title{Generate a bayes net mode}
 \usage{
 make_model(expression, iterations = 200, threshold = NULL, cluster = NULL)
 }
@@ -19,7 +19,7 @@ make_model(expression, iterations = 200, threshold = NULL, cluster = NULL)
 A list with the strength network dataframe, an averaged network and the threshold used to generate that averaged network.
 }
 \description{
-Generate a bayes net model
+Generate a bayes net mode
 }
 \examples{
 TRUE

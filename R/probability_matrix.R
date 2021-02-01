@@ -11,3 +11,18 @@
 #' }
 #'
 "ptk_probability_matrix"
+
+#' STK Peptide to Kinase Probability Matrix
+#'
+#' A dataaframe with the bayesian posteriors of finding a given peptide/kinase pair
+#'
+#' @format A dataframe with 10428 rows and 3 columns
+#'
+#' \describe{
+#' \item{peptide}{The peptide ID}
+#' \item{kinase}{Gene Symbol of the kinase}
+#' \item{posterior}{Posterior probability of the pair}
+#' }
+#'
+"stk_probability_matrix"
+
