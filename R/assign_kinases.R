@@ -200,6 +200,7 @@ candidate_kinases <- function(peptide, arcs, assigned_kinases) {
 #' @export
 #'
 #' @import dplyr bnlearn purrr tidyr
+#' @importFrom utils data
 #'
 #' @examples
 #' TRUE
@@ -211,11 +212,11 @@ assign_kinases <- function(network, chiptype = "PTK") {
   }
 
   if (chiptype == "PTK") {
-    annotation <- ptk_annotation
-    interactome <- ptk_interactome
+    annotation <- utils::data("ptk_annotation", envir = environment())
+    interactome <- utils::data("ptk_interactome", envir = environment())
   } else if (chiptype == "STK") {
-    annotation <- stk_annotation
-    interactome <- stk_interactome
+    annotation <- utils::data("stk_annotation", envir = environment())
+    interactome <- utils::data("stk_interactome", envir = environment())
   }
 
 

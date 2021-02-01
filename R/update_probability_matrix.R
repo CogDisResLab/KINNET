@@ -83,6 +83,7 @@ generate_posterior_probability_df <- function(annotated_df) {
 #'
 #' @import dplyr
 #' @importFrom rlang .data
+#' @importFrom utils data
 #'
 #' @examples
 #' TRUE
@@ -93,9 +94,9 @@ update_probability_matrix <- function(chiptype, assignment_df) {
   }
 
   if (chiptype == "PTK") {
-    annotation_posterior <- ptk_probability_matrix
+    annotation_posterior <- utils::data("ptk_annotation", envir = environment())
   } else if (chiptype == "STK") {
-    annotation_posterior <- stk_probability_matrix
+    annotation_posterior <- utils::data("stk_annotation", envir = environment())
   }
 
 
