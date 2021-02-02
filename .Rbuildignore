@@ -1,7 +1,7 @@
 ^renv$
 ^renv\.lock$
-^justin-kinome-modelling\.Rproj$
 ^\.Rproj\.user$
+^KINNET\.Rproj$
 ^data-raw$
 ^kinome_annotation$
 ^kinome_data$

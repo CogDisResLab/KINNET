@@ -3,7 +3,7 @@
 library(tidyverse)
 library(devtools)
 
-interactome_file <- file.path("kinome_annotation/RegPhos_kinase_PPI_human.txt")
+interactome_file <- file.path("data-raw/data/RegPhos_kinase_PPI_human.txt")
 
 interactome <- read_tsv(interactome_file) %>%
   select(GENE_a, GENE_b) %>%

@@ -21,8 +21,8 @@ render_kinased_graph <- function(analysis_result, title) {
     tibble::deframe()
 
   network_graph <- bnlearn::graphviz.plot(analysis_result$net,
-                                 shape = "ellipse", layout = "fdp",
-                                 main = title)
+                                          shape = "ellipse", layout = "fdp",
+                                          main = title)
 
 
   gr <- Rgraphviz::layoutGraph(network_graph, attrs = list(graph = list(rankdir = "TB")))

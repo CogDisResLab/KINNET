@@ -111,7 +111,7 @@ PamchipData_PTK <- function(dataset) {
     t %>%
     tibble::as_tibble() %>%
     dplyr::mutate(dummy = "dummy",
-      sample = str_c("S", stringr::str_pad(seq_along(.data$dummy), 5, pad = "0"))) %>%
+                  sample = str_c("S", stringr::str_pad(seq_along(.data$dummy), 5, pad = "0"))) %>%
     dplyr::select(-.data$dummy) %>%
     dplyr::select(.data$sample, everything())
 
@@ -131,7 +131,7 @@ PamchipData_PTK <- function(dataset) {
                   PeptideIDs = PeptideIDs,
                   ProcessedData = tibble(),
                   DataProcessDate = format(Sys.time(), "%a, %d %b %Y %T %Z", tz = "GMT")
-                  )
+  )
 
   chipdata
 

@@ -5,7 +5,7 @@ library(devtools)
 
 # Loading Annotation ------------------------------------------------------
 
-annotation <- read_csv("kinome_annotation/RegPhos_Annotation_human.csv") %>%
+annotation <- read_csv("data-raw/data/RegPhos_Annotation_human.csv") %>%
   mutate(Kinase = str_to_upper(Kinase),
          Group = str_to_upper(Group),
          Family = str_to_upper(Family),
@@ -22,7 +22,7 @@ annotation_clean <- annotation %>%
 
 # Processing UKA Mapping --------------------------------------------------
 
-uka_map <- read_csv("kinome_annotation/uka_pep2kinase_PTK.csv") %>%
+uka_map <- read_csv("data-raw/data/uka_pep2kinase_PTK.csv") %>%
   select(ID, Kinase_UniprotName) %>%
   rename(Kinase = Kinase_UniprotName) %>%
   filter(!is.na(Kinase)) %>%
@@ -52,7 +52,7 @@ uka_matched_by_gene <- uka_map %>%
 
 # Processing KRSA Mapping -------------------------------------------------
 
-krsa_map <- read_tsv("kinome_annotation/KRSA_Mapping_PTK_sep.tsv") %>%
+krsa_map <- read_tsv("data-raw/data/KRSA_Mapping_PTK_sep.tsv") %>%
   select(-db) %>%
   rename(Family = Kinases)
 
