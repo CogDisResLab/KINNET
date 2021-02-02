@@ -92,10 +92,10 @@ process_parent_child_link <- function(parent, node, child, kinase_annotation, in
 
     filtered_pn <- dplyr::intersect(expanded_pn, interactome) %>%
       dplyr::rename(parent = .data$from,
-             node = .data$to)
+                    node = .data$to)
     filtered_nc <- dplyr::intersect(expanded_nc, interactome) %>%
       dplyr::rename(node = .data$from,
-             child = .data$to)
+                    child = .data$to)
 
     filtered_links <- dplyr::inner_join(filtered_pn, filtered_nc, by = "node")
     filtered_links
@@ -117,7 +117,7 @@ process_parent_child_link <- function(parent, node, child, kinase_annotation, in
 
     filtered_nc <- dplyr::intersect(expanded_nc, interactome) %>%
       dplyr::rename(node = .data$from,
-             child = .data$to) %>%
+                    child = .data$to) %>%
       dplyr::mutate(parent = NA) %>%
       dplyr::select(.data$parent, .data$node, .data$child)
 
@@ -141,7 +141,7 @@ process_parent_child_link <- function(parent, node, child, kinase_annotation, in
 
     filtered_pn <- dplyr::intersect(expanded_pn, interactome) %>%
       dplyr::rename(parent = .data$from,
-             node = .data$to) %>%
+                    node = .data$to) %>%
       dplyr::mutate(child = NA) %>%
       dplyr::select(.data$parent, .data$node, .data$child)
 
@@ -200,6 +200,7 @@ candidate_kinases <- function(peptide, arcs, assigned_kinases) {
 #' @export
 #'
 #' @import dplyr bnlearn purrr tidyr
+#' @importFrom utils data
 #'
 #' @examples
 #' TRUE
@@ -211,11 +212,11 @@ assign_kinases <- function(network, chiptype = "PTK") {
   }
 
   if (chiptype == "PTK") {
-    annotation <- JustinKinomeModelling::ptk_annotation
-    interactome <- JustinKinomeModelling::ptk_interactome
+    annotation <- utils::data("ptk_annotation", envir = environment())
+    interactome <- utils::data("ptk_interactome", envir = environment())
   } else if (chiptype == "STK") {
-    annotation <- JustinKinomeModelling::stk_annotation
-    interactome <- JustinKinomeModelling::stk_interactome
+    annotation <- utils::data("stk_annotation", envir = environment())
+    interactome <- utils::data("stk_interactome", envir = environment())
   }
 
 
@@ -242,8 +243,8 @@ assign_kinases <- function(network, chiptype = "PTK") {
 
   # Generate a list of all possible kinases
   assigned_links <- purrr::pmap(triad_links, process_parent_child_link,
-                         kinase_annotation = subset_kinase_annotation,
-                         interactome = subset_interactome)
+                                kinase_annotation = subset_kinase_annotation,
+                                interactome = subset_interactome)
 
   # Assign Kinases
   kinase_assignment <- purrr::map(network_peptides, ~ candidate_kinases(.x, triad_links, assigned_links))
@@ -253,7 +254,7 @@ assign_kinases <- function(network, chiptype = "PTK") {
     purrr::map_dfr(names(kinase_assignment), function(x)
       tidyr::expand_grid(peptide = x, kinase  = kinase_assignment[[x]])) %>%
     dplyr::rename(ID = .data$peptide,
-           Gene_Symbol = .data$kinase)
+                  Gene_Symbol = .data$kinase)
 
   updated_probabilities <- update_probability_matrix(chiptype, kinase_assignment_df)
 

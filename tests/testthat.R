@@ -1,4 +1,4 @@
 library(testthat)
-library(JustinKinomeModelling)
+library(KINNET)
 
-test_check("JustinKinomeModelling")
+test_check("KINNET")
