@@ -3,7 +3,5 @@
 ^\.Rproj\.user$
 ^KINNET\.Rproj$
 ^data-raw$
-^kinome_annotation$
-^kinome_data$
 ^README\.Rmd$
 ^\.travis\.yml$
