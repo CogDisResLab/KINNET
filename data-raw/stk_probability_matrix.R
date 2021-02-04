@@ -3,5 +3,3 @@
 data("stk_annotation")
 
 stk_probability_matrix <- KINNET::generate_posterior_probability_df(stk_annotation)
-
-usethis::use_data(stk_probability_matrix, overwrite = TRUE)

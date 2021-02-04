@@ -92,6 +92,3 @@ ptk_annotation <- bind_rows(
   select(ID, Group, Family, Subfamily, Kinase, Gene_Symbol) %>%
   filter(!is.na(ID)) %>%
   unique()
-
-
-usethis::use_data(ptk_annotation, overwrite = TRUE)

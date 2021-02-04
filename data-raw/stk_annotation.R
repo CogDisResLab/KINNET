@@ -131,6 +131,3 @@ stk_annotation <- bind_rows(
 ) %>%
   select(ID, Group, Family, Subfamily, Kinase, Gene_Symbol) %>%
   unique()
-
-
-usethis::use_data(stk_annotation, overwrite = TRUE)

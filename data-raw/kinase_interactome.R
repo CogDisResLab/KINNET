@@ -17,5 +17,3 @@ interactome_na_from <- interactome$from %>%
   tibble(from = ., to = NA)
 
 kinase_interactome <- bind_rows(interactome, interactome_na_to, interactome_na_from)
-
-usethis::use_data(kinase_interactome, overwrite = TRUE)
