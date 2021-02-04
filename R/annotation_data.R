@@ -57,3 +57,17 @@
 #' }
 #'
 "stk_interactome"
+
+#' Protein-Protein Interactome of humans
+#'
+#' A complete known map of Protein-Protein interactions in the human
+#' interactome
+#'
+#' @format A dataframe with 137889 rows and 2 columns
+#'
+#' \describe{
+#' \item{from}{The Affecting protein}
+#' \item{to}{The Affected Protein}
+#' }
+#'
+"kinase_interactome"
