@@ -94,9 +94,9 @@ update_probability_matrix <- function(chiptype, assignment_df) {
   }
 
   if (chiptype == "PTK") {
-    annotation_posterior <- utils::data("ptk_annotation", envir = environment())
+    annotation_posterior <- ptk_probability_matrix
   } else if (chiptype == "STK") {
-    annotation_posterior <- utils::data("stk_annotation", envir = environment())
+    annotation_posterior <- stk_probability_matrix
   }
 
 
