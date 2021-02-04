@@ -212,17 +212,12 @@ assign_kinases <- function(network, chiptype = "PTK") {
   }
 
   if (chiptype == "PTK") {
-    annotation <- utils::data("ptk_annotation", envir = environment())
-    interactome <- utils::data("ptk_interactome", envir = environment())
+    annotation <- ptk_annotation
   } else if (chiptype == "STK") {
-    annotation <- utils::data("stk_annotation", envir = environment())
-    interactome <- utils::data("stk_interactome", envir = environment())
+    annotation <- stk_annotation
   }
 
-
-
-
-
+  interactome <- kinase_interactome
 
   # Load and filter appropriate data
   subset_kinase_annotation <- annotation %>%
