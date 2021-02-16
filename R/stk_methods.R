@@ -7,12 +7,6 @@ setMethod(
   signature = "PamchipData-STK",
   definition = function(object) {
     print(
-      # stringr::str_glue(
-      #   "
-      #   {object@ChipType} PamChip data
-      #   {nrow(x@SampleData)} samples with {nrow(x@SampleCharacteristics$class)} distinct classes.
-      #   "
-      # )
       stringr::str_glue("{object@ChipType} PamChip Data
                         Processed with BioNavigator {object@BioNavigatorVersion}
                         Processing done on {object@ImageAnalysisDate}
