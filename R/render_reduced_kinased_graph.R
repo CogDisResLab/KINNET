@@ -34,7 +34,7 @@ render_reduced_kinased_graph <- function(analysis_result, title) {
     as.matrix()
 
   bn <- bnlearn::empty.graph(unique(c(mapped_net_arcs)))
-  bnlearn::arcs(bn) <- mapped_net_arcs
+  bnlearn::arcs(bn, check.cycles = FALSE, check.illegal = FALSE) <- mapped_net_arcs
 
   network_graph <- bnlearn::graphviz.plot(bn,
                                           shape = "ellipse", layout = "fdp",
@@ -43,7 +43,6 @@ render_reduced_kinased_graph <- function(analysis_result, title) {
 
   gr <- Rgraphviz::layoutGraph(network_graph, attrs = list(graph = list(rankdir = "TB")))
   graph::graphRenderInfo(gr)$fontsize <- 24
-  graph::nodeRenderInfo(gr)$label <- mapped_kinases
   graph::nodeRenderInfo(gr)$fontsize <- 14
   graph::nodeRenderInfo(gr)$fixedsize <- TRUE
   graph::nodeRenderInfo(gr)$height <- 25
