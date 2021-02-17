@@ -1,7 +1,7 @@
 Package: KINNET
 Type: Package
 Title: Kinase INteraction NETwork Generation
-Version: 0.4.0
+Version: 0.4.0.9000
 Authors@R: c(
     person(given = c("Ali", "Sajid"),
            family = "Imami",
@@ -57,6 +57,7 @@ Collate:
     'probability_matrix.R'
     'ptk_methods.R'
     'render_kinase_graph.R'
+    'render_reduced_kinased_graph.R'
     'stk_methods.R'
     'subset_data.R'
     'update_probability_matrix.R'
