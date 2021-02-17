@@ -1,7 +1,7 @@
 Package: KINNET
 Type: Package
 Title: Kinase INteraction NETwork Generation
-Version: 0.4.0.9001
+Version: 0.4.0.9002
 Authors@R: c(
     person(given = c("Ali", "Sajid"),
            family = "Imami",
@@ -50,13 +50,14 @@ Depends:
 RoxygenNote: 7.1.1
 Collate: 
     'assign_kinases.R'
+    'compare_kinased_graphs.R'
     'make_model.R'
     'pamchip_data.R'
     'pamchip_data_ptk.R'
     'pamchip_data_stk.R'
     'probability_matrix.R'
     'ptk_methods.R'
-    'render_kinase_graph.R'
+    'render_kinased_graph.R'
     'render_reduced_kinased_graph.R'
     'stk_methods.R'
     'subset_data.R'

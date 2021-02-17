@@ -51,5 +51,9 @@ render_reduced_kinased_graph <- function(analysis_result, title) {
   graph::edgeRenderInfo(gr)$weight <- 20
 
   Rgraphviz::renderGraph(gr)
-  invisible(gr)
+
+  out <- list(bnnet = bn,
+              graphviz_plot = gr)
+
+  invisible(out)
 }
