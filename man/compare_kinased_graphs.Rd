@@ -8,7 +8,8 @@ compare_kinased_graphs(
   reference,
   comparison,
   ref_name = "Reference",
-  comp_name = "Comparison"
+  comp_name = "Comparison",
+  render = FALSE
 )
 }
 \arguments{
@@ -19,6 +20,8 @@ compare_kinased_graphs(
 \item{ref_name}{Name for the reference network}
 
 \item{comp_name}{Name for the comparison network}
+
+\item{render}{logical. Whether a graph should be rendered or not.}
 }
 \value{
 A graph object

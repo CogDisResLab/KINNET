@@ -4,12 +4,14 @@
 \alias{render_kinased_graph}
 \title{Generate a kianse graph}
 \usage{
-render_kinased_graph(analysis_result, title)
+render_kinased_graph(analysis_result, title, render = FALSE)
 }
 \arguments{
 \item{analysis_result}{Object output from assign_kinases()}
 
 \item{title}{Title of the graph}
+
+\item{render}{logical. Whether a graph should be rendered or not.}
 }
 \value{
 a graph object

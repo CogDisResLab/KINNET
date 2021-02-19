@@ -28,6 +28,7 @@ safely_add_node <- function(net, node) {
 #' @param comparison The comparison network output from assign_kinases()
 #' @param ref_name Name for the reference network
 #' @param comp_name Name for the comparison network
+#' @param render logical. Whether a graph should be rendered or not.
 #'
 #' @return A graph object
 #' @export
@@ -39,30 +40,15 @@ safely_add_node <- function(net, node) {
 #'
 #' @examples
 #' TRUE
-compare_kinased_graphs <- function(reference, comparison, ref_name = "Reference", comp_name = "Comparison") {
+compare_kinased_graphs <- function(reference, comparison, ref_name = "Reference", comp_name = "Comparison", render = FALSE) {
 
-  ref_kinased <- render_reduced_kinased_graph(reference, title = "Reference")
-  ref_bnnet <- ref_kinased$bnnet
-  comp_kinased <- render_reduced_kinased_graph(comparison, title = "Comparison")
-  comp_bnnet <- comp_kinased$bnnet
-
-  all_nodes <- unique(c(bnlearn::nodes(ref_bnnet), bnlearn::nodes(comp_bnnet)))
-
-  ref_bnnet_augmented <- ref_bnnet
-  for (node in all_nodes) {
-    ref_bnnet_augmented <- safely_add_node(ref_bnnet_augmented, node)
-  }
-
-  comp_bnnet_augmented <- comp_bnnet
-  for (node in all_nodes) {
-    comp_bnnet_augmented <- safely_add_node(comp_bnnet_augmented, node)
-  }
+  pair <- equalize_kinase_graphs(reference, comparison)
 
   title <- stringr::str_glue("Comparative Network between {ref_name} and {comp_name}")
 
 
-  comp_graph <- bnlearn::graphviz.compare(ref_bnnet_augmented,
-                            comp_bnnet_augmented,
+  comp_graph <- bnlearn::graphviz.compare(pair$reference,
+                            pair$comparison,
                             diff.args = list(
                               tp.col = "blue",
                               tp.lty = 2,
@@ -84,7 +70,9 @@ compare_kinased_graphs <- function(reference, comparison, ref_name = "Reference"
   graph::edgeRenderInfo(gr)$weight <- 20
   graph::edgeRenderInfo(gr)$col <- graph::edgeRenderInfo(comp_graph[[2]], "col")
 
-  Rgraphviz::renderGraph(gr)
+  if (render == TRUE) {
+    Rgraphviz::renderGraph(gr)
+  }
 
   invisible(gr)
 

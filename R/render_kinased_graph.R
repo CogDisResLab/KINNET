@@ -2,6 +2,7 @@
 #'
 #' @param analysis_result Object output from assign_kinases()
 #' @param title Title of the graph
+#' @param render logical. Whether a graph should be rendered or not.
 #'
 #' @return a graph object
 #' @export
@@ -13,7 +14,7 @@
 #'
 #' @examples
 #' TRUE
-render_kinased_graph <- function(analysis_result, title) {
+render_kinased_graph <- function(analysis_result, title, render = FALSE) {
   mapped_kinases <- analysis_result$mapped_kinases %>%
     dplyr::select(.data$peptide, .data$kinase) %>%
     dplyr::group_by(.data$peptide) %>%
@@ -35,6 +36,9 @@ render_kinased_graph <- function(analysis_result, title) {
   graph::nodeRenderInfo(gr)$rWidth <- 37.5
   graph::edgeRenderInfo(gr)$weight <- 20
 
-  Rgraphviz::renderGraph(gr)
+  if (render == TRUE) {
+    Rgraphviz::renderGraph(gr)
+  }
+
   invisible(gr)
 }
