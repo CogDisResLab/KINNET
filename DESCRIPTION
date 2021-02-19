@@ -51,6 +51,8 @@ RoxygenNote: 7.1.1
 Collate: 
     'assign_kinases.R'
     'compare_kinased_graphs.R'
+    'distances.R'
+    'equalize_kinase_graphs.R'
     'make_model.R'
     'pamchip_data.R'
     'pamchip_data_ptk.R'
