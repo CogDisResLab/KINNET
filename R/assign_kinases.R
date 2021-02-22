@@ -204,7 +204,7 @@ candidate_kinases <- function(peptide, arcs, assigned_kinases) {
 #'
 #' @examples
 #' TRUE
-assign_kinases <- function(network, chiptype = "PTK") {
+assign_kinases <- function(network, chiptype) {
 
   # Assign the appropriate annotation
   if (!chiptype %in% c("PTK", "STK")) {
