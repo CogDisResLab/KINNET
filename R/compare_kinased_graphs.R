@@ -52,9 +52,9 @@ compare_kinased_graphs <- function(reference, comparison, ref_name = "Reference"
                             diff.args = list(
                               tp.col = "blue",
                               tp.lty = 2,
-                              fp.col = "red",
+                              fp.col = "darkgreen",
                               fp.lty = 1,
-                              fn.col = "darkgreen",
+                              fn.col = "red",
                               fn.lty = 1
                             ),
                             shape = "ellipse",
