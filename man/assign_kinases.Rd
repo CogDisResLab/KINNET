@@ -4,7 +4,7 @@
 \alias{assign_kinases}
 \title{Assign kinases, given a network and a chip type}
 \usage{
-assign_kinases(network, chiptype = "PTK")
+assign_kinases(network, chiptype)
 }
 \arguments{
 \item{network}{A network output from bnlearn}
