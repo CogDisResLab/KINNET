@@ -27,6 +27,8 @@ A representation of the PamChip STK Data
 
 \item{\code{RefData}}{tbl_df.}
 
+\item{\code{PositiveControlData}}{tbl_df.}
+
 \item{\code{PeptideIDs}}{character.}
 
 \item{\code{ProcessedData}}{tbl_df.}
