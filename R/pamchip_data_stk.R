@@ -12,6 +12,7 @@ NULL
 #' @slot SampleData tbl_df. A tibble with the observed activity on each peptide
 #' @slot SampleCharacteristics tbl_df. A tibble with the characteristics of each sample
 #' @slot RefData tbl_df.
+#' @slot PositiveControlData tbl_df.
 #' @slot PeptideIDs character.
 #' @slot ProcessedData tbl_df.
 #' @slot DataProcessDate character. The date when the data was processed
@@ -31,6 +32,7 @@ setClass("PamchipData-STK",
            PamGridVersion = "character",
            QuantitationType = "character",
            RefData = "tbl_df",
+           PositiveControlData = "tbl_df",
            SampleData = "tbl_df",
            SampleCharacteristics = "tbl_df",
            PeptideIDs = "character",
@@ -107,11 +109,25 @@ PamchipData_STK <- function(dataset) {
   # Process Sample Data
   SampleData <- readr::read_tsv(sample_data, col_names = F) %>%
     dplyr::select(-.data$X2) %>%
+    filter(str_detect(X1, "^p", negate = TRUE)) %>%
     tibble::column_to_rownames("X1") %>%
     t %>%
     tibble::as_tibble() %>%
     dplyr::mutate(dummy = "dummy",
       sample = str_c("S", stringr::str_pad(seq_along(.data$dummy), 5, pad = "0"))) %>%
+    dplyr::select(-.data$dummy) %>%
+    dplyr::select(.data$sample, everything())
+
+  # Process Positive Control Data
+
+  PositiveControlData <- readr::read_tsv(sample_data, col_names = F) %>%
+    dplyr::select(-.data$X2) %>%
+    filter(str_detect(.data$X1, "^p")) %>%
+    tibble::column_to_rownames("X1") %>%
+    t %>%
+    tibble::as_tibble() %>%
+    dplyr::mutate(dummy = "dummy",
+                  sample = str_c("S", stringr::str_pad(seq_along(.data$dummy), 5, pad = "0"))) %>%
     dplyr::select(-.data$dummy) %>%
     dplyr::select(.data$sample, everything())
 
@@ -126,6 +142,7 @@ PamchipData_STK <- function(dataset) {
                   PamGridVersion = BioNavigatorVersion,
                   QuantitationType = QuantitationType,
                   RefData = RefData,
+                  PositiveControlData = PositiveControlData,
                   SampleData = SampleData,
                   SampleCharacteristics = SampleCharacteristics,
                   PeptideIDs = PeptideIDs,
