@@ -31,8 +31,6 @@ A representation of the PamChip STK Data
 
 \item{\code{PeptideIDs}}{character.}
 
-\item{\code{ProcessedData}}{tbl_df.}
-
 \item{\code{DataProcessDate}}{character. The date when the data was processed}
 }}
 
