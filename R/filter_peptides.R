@@ -77,7 +77,7 @@ filter_peptides <- function(chipdata, threshold = 0.75) {
     purrr::map(~ dplyr::pull(.x, .data$peptide)) %>%
     purrr::map(~ unique(.x))
 
-  names(filtered) <- classes(chipdata)
+  names(filtered) <- sort(classes(chipdata))
 
   filtered
 }
