@@ -14,7 +14,6 @@ NULL
 #' @slot RefData tbl_df.
 #' @slot PositiveControlData tbl_df.
 #' @slot PeptideIDs character.
-#' @slot ProcessedData tbl_df.
 #' @slot DataProcessDate character. The date when the data was processed
 #'
 #' @return An object of class PamchipData-STK
@@ -36,7 +35,6 @@ setClass("PamchipData-STK",
            SampleData = "tbl_df",
            SampleCharacteristics = "tbl_df",
            PeptideIDs = "character",
-           ProcessedData = "tbl_df",
            DataProcessDate = "character"
          ),
          contains = "PamchipData",
@@ -109,7 +107,7 @@ PamchipData_STK <- function(dataset) {
   # Process Sample Data
   SampleData <- readr::read_tsv(sample_data, col_names = F) %>%
     dplyr::select(-.data$X2) %>%
-    filter(str_detect(X1, "^p", negate = TRUE)) %>%
+    filter(str_detect(.data$X1, "^p", negate = TRUE)) %>%
     tibble::column_to_rownames("X1") %>%
     t %>%
     tibble::as_tibble() %>%
@@ -146,7 +144,6 @@ PamchipData_STK <- function(dataset) {
                   SampleData = SampleData,
                   SampleCharacteristics = SampleCharacteristics,
                   PeptideIDs = PeptideIDs,
-                  ProcessedData = tibble(),
                   DataProcessDate = format(Sys.time(), "%a, %d %b %Y %T %Z", tz = "GMT")
                   )
 
