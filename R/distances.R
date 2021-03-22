@@ -1,10 +1,12 @@
 #' Calculate the Structural Hamming Distance between two kinased graphs
 #'
 #' @param reference a reference result from assign_kinases()
-#' @param comparison a comparison result from assign_kinases
+#' @param comparison a comparison result from assign_kinases()
 #'
 #' @return A positive integer
 #' @export
+#'
+#' @importFrom bnlearn shd
 #'
 #' @examples
 #' TRUE
@@ -20,10 +22,12 @@ kinnet_shd <- function(reference, comparison) {
 #' Calculate the Hamming Distance between two kinased graphs
 #'
 #' @param reference a reference result from assign_kinases()
-#' @param comparison a comparison result from assign_kinases
+#' @param comparison a comparison result from assign_kinases()
 #'
 #' @return A positive integer
 #' @export
+#'
+#' @importFrom bnlearn hamming
 #'
 #' @examples
 #' TRUE

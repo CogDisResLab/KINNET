@@ -9,7 +9,7 @@ kinnet_hamming(reference, comparison)
 \arguments{
 \item{reference}{a reference result from assign_kinases()}
 
-\item{comparison}{a comparison result from assign_kinases}
+\item{comparison}{a comparison result from assign_kinases()}
 }
 \value{
 A positive integer

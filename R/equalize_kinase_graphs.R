@@ -1,7 +1,7 @@
 #' Equalize the nodesets of two kinased graphs
 #'
 #' @param reference a reference result from assign_kinases()
-#' @param comparison a comparison result from assign_kinases
+#' @param comparison a comparison result from assign_kinases()
 #'
 #' @return A list with two elements, reference and comparison, that have the
 #' same nodesets
