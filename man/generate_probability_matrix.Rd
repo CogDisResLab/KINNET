@@ -4,10 +4,12 @@
 \alias{generate_probability_matrix}
 \title{Generate a Probability Matrix of observing a given peptide/kinase pair}
 \usage{
-generate_probability_matrix(annotated_df)
+generate_probability_matrix(annotated_df, identifier)
 }
 \arguments{
 \item{annotated_df}{tbl_df. A tibble with a list of all peptide/kinase pairs}
+
+\item{identifier}{The identifier to use in outputs. Can be either "Gene_Symbol" or "Kinase"}
 }
 \value{
 A tibble with the unadjusted probabilities

@@ -4,10 +4,12 @@
 \alias{generate_posterior_probability_df}
 \title{Generate Posterior probabilities given priors}
 \usage{
-generate_posterior_probability_df(annotated_df)
+generate_posterior_probability_df(annotated_df, identifier = "Gene_Symbol")
 }
 \arguments{
 \item{annotated_df}{tbl_df. A tibble with a list of all peptide/kinase pairs}
+
+\item{identifier}{The identifier to use in outputs. Can be either "Gene_Symbol" or "Kinase"}
 }
 \value{
 A tibble with posterior probabilities for each peptide/kinase pair

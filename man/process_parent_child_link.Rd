@@ -4,7 +4,14 @@
 \alias{process_parent_child_link}
 \title{Filter list of kinases based on the parents and children}
 \usage{
-process_parent_child_link(parent, node, child, kinase_annotation, interactome)
+process_parent_child_link(
+  parent,
+  node,
+  child,
+  kinase_annotation,
+  interactome,
+  identifier
+)
 }
 \arguments{
 \item{parent}{Parent node for the given triad}

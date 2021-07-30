@@ -7,11 +7,13 @@ setMethod(
   signature = "PamchipData-PTK",
   definition = function(object) {
     print(
-      stringr::str_glue("{object@ChipType} PamChip Data
+      stringr::str_glue(
+        "{object@ChipType} PamChip Data
                         Processed with BioNavigator {object@BioNavigatorVersion}
                         Processing done on {object@ImageAnalysisDate}
                         {nrow(exp_data(object))} Observations in {length(unique(pheno_data(object)$class))} distinct classes
-                        ")
+                        "
+      )
     )
     invisible(NULL)
   }
@@ -37,7 +39,7 @@ setMethod("processed_data<-", "PamchipData-PTK",
             }
           })
 
-setGeneric("pheno_data", function(object,...) {
+setGeneric("pheno_data", function(object, ...) {
   standardGeneric("pheno_data")
 })
 
@@ -46,7 +48,7 @@ setMethod("pheno_data", "PamchipData-PTK",
             object@SampleCharacteristics
           })
 
-setGeneric("exp_data", function(object,...) {
+setGeneric("exp_data", function(object, ...) {
   standardGeneric("exp_data")
 })
 
@@ -55,7 +57,7 @@ setMethod("exp_data", "PamchipData-PTK",
             object@SampleData
           })
 
-setGeneric("classes", function(object,...) {
+setGeneric("classes", function(object, ...) {
   standardGeneric("classes")
 })
 
@@ -65,7 +67,7 @@ setMethod("classes", "PamchipData-PTK",
           })
 
 
-setGeneric("peptides", function(object,...) {
+setGeneric("peptides", function(object, ...) {
   standardGeneric("peptides")
 })
 

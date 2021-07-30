@@ -40,40 +40,49 @@ safely_add_node <- function(net, node) {
 #'
 #' @examples
 #' TRUE
-compare_kinased_graphs <- function(reference, comparison, ref_name = "Reference", comp_name = "Comparison", render = FALSE) {
+compare_kinased_graphs <-
+  function(reference,
+           comparison,
+           ref_name = "Reference",
+           comp_name = "Comparison",
+           render = FALSE) {
+    pair <- equalize_kinase_graphs(reference, comparison)
 
-  pair <- equalize_kinase_graphs(reference, comparison)
+    title <-
+      stringr::str_glue("Comparative Network between {ref_name} and {comp_name}")
 
-  title <- stringr::str_glue("Comparative Network between {ref_name} and {comp_name}")
 
+    comp_graph <- bnlearn::graphviz.compare(
+      pair$reference,
+      pair$comparison,
+      diff.args = list(
+        tp.col = "blue",
+        tp.lty = 2,
+        fp.col = "darkgreen",
+        fp.lty = 1,
+        fn.col = "red",
+        fn.lty = 1
+      ),
+      shape = "ellipse",
+      layout = "fdp"
+    )
 
-  comp_graph <- bnlearn::graphviz.compare(pair$reference,
-                            pair$comparison,
-                            diff.args = list(
-                              tp.col = "blue",
-                              tp.lty = 2,
-                              fp.col = "darkgreen",
-                              fp.lty = 1,
-                              fn.col = "red",
-                              fn.lty = 1
-                            ),
-                            shape = "ellipse",
-                            layout = "fdp")
+    gr <-
+      Rgraphviz::layoutGraph(comp_graph[[2]], attrs = list(graph = list(rankdir = "TB", main = title)))
+    graph::graphRenderInfo(gr)$fontsize <- 24
+    graph::nodeRenderInfo(gr)$fontsize <- 14
+    graph::nodeRenderInfo(gr)$fixedsize <- TRUE
+    graph::nodeRenderInfo(gr)$height <- 25
+    graph::nodeRenderInfo(gr)$lWidth <- 37.5
+    graph::nodeRenderInfo(gr)$rWidth <- 37.5
+    graph::edgeRenderInfo(gr)$weight <- 20
+    graph::edgeRenderInfo(gr)$col <-
+      graph::edgeRenderInfo(comp_graph[[2]], "col")
 
-  gr <- Rgraphviz::layoutGraph(comp_graph[[2]], attrs = list(graph = list(rankdir = "TB", main = title)))
-  graph::graphRenderInfo(gr)$fontsize <- 24
-  graph::nodeRenderInfo(gr)$fontsize <- 14
-  graph::nodeRenderInfo(gr)$fixedsize <- TRUE
-  graph::nodeRenderInfo(gr)$height <- 25
-  graph::nodeRenderInfo(gr)$lWidth <- 37.5
-  graph::nodeRenderInfo(gr)$rWidth <- 37.5
-  graph::edgeRenderInfo(gr)$weight <- 20
-  graph::edgeRenderInfo(gr)$col <- graph::edgeRenderInfo(comp_graph[[2]], "col")
+    if (render == TRUE) {
+      Rgraphviz::renderGraph(gr)
+    }
 
-  if (render == TRUE) {
-    Rgraphviz::renderGraph(gr)
+    invisible(gr)
+
   }
-
-  invisible(gr)
-
-}

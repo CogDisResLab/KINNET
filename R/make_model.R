@@ -12,23 +12,25 @@
 #'
 #' @examples
 #' TRUE
-make_model <- function(expression, iterations = 200, threshold = NULL, cluster = NULL) {
-  strength_model <- bnlearn::boot.strength(
-    expression,
-    R = iterations,
-    algorithm = "hc",
-    cluster = cluster
-  )
+make_model <-
+  function(expression,
+           iterations = 200,
+           threshold = NULL,
+           cluster = NULL) {
+    strength_model <- bnlearn::boot.strength(expression,
+                                             R = iterations,
+                                             algorithm = "hc",
+                                             cluster = cluster)
 
-  significance_threshold <- if_else(is.null(threshold),
-                                    attr(strength_model, "threshold"),
-                                    threshold)
+    significance_threshold <- if_else(is.null(threshold),
+                                      attr(strength_model, "threshold"),
+                                      threshold)
 
-  out <- list(
-    strength_net = strength_model,
-    avg_net = bnlearn::averaged.network(strength_model, threshold = significance_threshold),
-    threshold = significance_threshold
-  )
+    out <- list(
+      strength_net = strength_model,
+      avg_net = bnlearn::averaged.network(strength_model, threshold = significance_threshold),
+      threshold = significance_threshold
+    )
 
-  out
-}
+    out
+  }

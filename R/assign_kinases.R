@@ -41,7 +41,7 @@ default_children <- function(x, n) {
 #' @examples
 #' TRUE
 generate_triad_links <- function(arcs, net) {
-  triad_links <- arcs %>% purrr::map_dfr( ~ expand_grid(
+  triad_links <- arcs %>% purrr::map_dfr(~ expand_grid(
     parent = default_parent(net, .x),
     node = .x,
     child = default_children(net, .x)
@@ -189,7 +189,7 @@ candidate_kinases <- function(peptide, arcs, assigned_kinases) {
       )
     ) %>%
     select(.data$row, .data$column) %>%
-    purrr::pmap( ~ get_intersections(..1, ..2, assigned_kinases)) %>%
+    purrr::pmap(~ get_intersections(..1, ..2, assigned_kinases)) %>%
     purrr::reduce(intersect)
 }
 
@@ -197,6 +197,7 @@ candidate_kinases <- function(peptide, arcs, assigned_kinases) {
 #'
 #' @param network A network output from bnlearn
 #' @param chiptype Either PTK or STK
+#' @param identifier The identifier to use in outputs. Can be either "Gene_Symbol" or "Kinase"
 #'
 #' @return A dataframe with upstream kinases assigned to the peptide
 #' @export
@@ -223,7 +224,7 @@ assign_kinases <-
 
     if (identifier == "Gene_Symbol") {
       interactome <- kinase_interactome_gene
-    } else if (identifier == "Kinase" ) {
+    } else if (identifier == "Kinase") {
       interactome <- kinase_interactome_kinase
     } else {
       stop("Invalid Identifier Specified.\nPlease choose between Kinase and Gene_Symbol")
