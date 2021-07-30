@@ -17,11 +17,11 @@ fit_standardized <- function(expr) {
     dplyr::filter(.data$exposure %in% c(10, 50, 200)) %>%
     dplyr::group_by(.data$exposure) %>%
     dplyr::group_split() %>%
-    purrr::map(~ lm(activity ~ cycle, data = .x)) %>%
-    purrr::map(~ effectsize::standardize_parameters(.x)) %>%
+    purrr::map( ~ lm(activity ~ cycle, data = .x)) %>%
+    purrr::map( ~ effectsize::standardize_parameters(.x)) %>%
     purrr::map("Std_Coefficient") %>%
     purrr::map(2) %>%
-    purrr::map_dbl(~ round(.x, 3))
+    purrr::map_dbl( ~ round(.x, 3))
 
   names(res) <- c("std_10", "std_50", "std_200")
   output <- as.list(res)
@@ -47,19 +47,24 @@ fit_standardized <- function(expr) {
 filter_peptides <- function(chipdata, threshold = 0.75) {
   pheno <- pheno_data(chipdata) %>%
     dplyr::mutate(exposure = as.numeric(.data$exposure),
-           cycle = as.numeric(.data$cycle) - 92)
+                  cycle = as.numeric(.data$cycle) - 92)
 
   expr <- exp_data(chipdata) %>%
-    dplyr::mutate(dplyr::across(tidyselect::vars_select_helpers$where(is.numeric), ~ dplyr::if_else(.x < 0, 0, .x)))
+    dplyr::mutate(dplyr::across(
+      tidyselect::vars_select_helpers$where(is.numeric),
+      ~ dplyr::if_else(.x < 0, 0, .x)
+    ))
 
   nclasses <- length(classes(chipdata))
-  nreplicates <- round(12/nclasses)
+  nreplicates <- round(12 / nclasses)
 
 
   augmented <-
     pheno %>%
     dplyr::inner_join(expr, by = "sample") %>%
-    tidyr::pivot_longer(matches("\\_\\s?\\d+\\_", perl = TRUE), names_to = "peptide", values_to = "activity") %>%
+    tidyr::pivot_longer(matches("\\_\\s?\\d+\\_", perl = TRUE),
+                        names_to = "peptide",
+                        values_to = "activity") %>%
     dplyr::group_by(.data$barcode, .data$array, .data$class, .data$peptide) %>%
     nest() %>%
     dplyr::mutate(cors = purrr::map(.data$data, fit_standardized)) %>%
@@ -68,14 +73,16 @@ filter_peptides <- function(chipdata, threshold = 0.75) {
 
   filtered <- augmented %>%
     dplyr::group_by(.data$class, .data$peptide) %>%
-    dplyr::filter(.data$std_10 > threshold, .data$std_50 > threshold, .data$std_200 > threshold) %>%
+    dplyr::filter(.data$std_10 > threshold,
+                  .data$std_50 > threshold,
+                  .data$std_200 > threshold) %>%
     dplyr::summarise(n = n()) %>%
     dplyr::ungroup() %>%
     dplyr::filter(.data$n == nreplicates) %>%
     dplyr::group_by(class) %>%
     dplyr::group_split() %>%
-    purrr::map(~ dplyr::pull(.x, .data$peptide)) %>%
-    purrr::map(~ unique(.x))
+    purrr::map( ~ dplyr::pull(.x, .data$peptide)) %>%
+    purrr::map( ~ unique(.x))
 
   names(filtered) <- sort(classes(chipdata))
 

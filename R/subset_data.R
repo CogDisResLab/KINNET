@@ -23,7 +23,11 @@ subset_data <- function(chipdata, peptides, class) {
   }
 
   samples <- pheno_data(chipdata) %>%
-    dplyr::filter(.data$class == {{class}}) %>%
+    dplyr::filter(.data$class == {
+      {
+        class
+      }
+    }) %>%
     dplyr::pull(.data$sample)
 
   filtered_data <- exp_data(chipdata) %>%

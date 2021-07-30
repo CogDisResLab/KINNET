@@ -10,14 +10,12 @@ NULL
 #' @examples
 #' TRUE
 setClass("PamchipData",
-         slots = c(
-           ChipType = "character"
-         ),
+         slots = c(ChipType = "character"),
          contains = "VIRTUAL")
 
 setValidity("PamchipData",
             function(object) {
-              if(!object@ChipType %in% c("PTK", "STK")) {
+              if (!object@ChipType %in% c("PTK", "STK")) {
                 "Invalid @chip_type"
               } else {
                 TRUE

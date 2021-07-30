@@ -24,23 +24,23 @@ NULL
 #'
 #' @examples
 #' TRUE
-setClass("PamchipData-STK",
-         slots = c(
-           BioNavigatorVersion = "character",
-           ImageAnalysisDate = "character",
-           PamGridVersion = "character",
-           QuantitationType = "character",
-           RefData = "tbl_df",
-           PositiveControlData = "tbl_df",
-           SampleData = "tbl_df",
-           SampleCharacteristics = "tbl_df",
-           PeptideIDs = "character",
-           DataProcessDate = "character"
-         ),
-         contains = "PamchipData",
-         prototype = list(
-           ChipType = "STK"
-         ))
+setClass(
+  "PamchipData-STK",
+  slots = c(
+    BioNavigatorVersion = "character",
+    ImageAnalysisDate = "character",
+    PamGridVersion = "character",
+    QuantitationType = "character",
+    RefData = "tbl_df",
+    PositiveControlData = "tbl_df",
+    SampleData = "tbl_df",
+    SampleCharacteristics = "tbl_df",
+    PeptideIDs = "character",
+    DataProcessDate = "character"
+  ),
+  contains = "PamchipData",
+  prototype = list(ChipType = "STK")
+)
 
 setValidity("PamchipData-STK",
             function(object) {
@@ -67,9 +67,12 @@ PamchipData_STK <- function(dataset) {
   id_line <- which(stringr::str_detect(input_data, "ID"))
   ref_end <- max(which(stringr::str_detect(input_data, "REF")))
   metadata_line <- stringr::str_c(input_data[1], "\n")
-  characteristic_data <- stringr::str_c(input_data[2:(id_line-1)], collapse = "\n")
-  ref_data <- stringr::str_c(input_data[(id_line + 1):ref_end], collapse = "\n")
-  sample_data <- stringr::str_c(input_data[(ref_end + 1):length(input_data)], collapse = "\n")
+  characteristic_data <-
+    stringr::str_c(input_data[2:(id_line - 1)], collapse = "\n")
+  ref_data <-
+    stringr::str_c(input_data[(id_line + 1):ref_end], collapse = "\n")
+  sample_data <-
+    stringr::str_c(input_data[(ref_end + 1):length(input_data)], collapse = "\n")
 
 
 
@@ -80,13 +83,15 @@ PamchipData_STK <- function(dataset) {
   QuantitationType <- metadata$X5
 
   # Process Sample Characteristics
-  SampleCharacteristics <- readr::read_tsv(characteristic_data, col_names = F) %>%
+  SampleCharacteristics <-
+    readr::read_tsv(characteristic_data, col_names = F) %>%
     dplyr::select(-.data$X1) %>%
     column_to_rownames("X2") %>%
     t %>%
     tibble::as_tibble() %>%
     dplyr::rename_with(stringr::str_to_lower) %>%
-    dplyr::rename_with(function(n) gsub(" ", "_", n)) %>%
+    dplyr::rename_with(function(n)
+      gsub(" ", "_", n)) %>%
     dplyr::rename(class = .data$sample_name,
                   exposure = .data$exposure_time) %>%
     dplyr::mutate(sample = str_c("S", stringr::str_pad(seq_along(.data$barcode), 5, pad = "0"))) %>%
@@ -112,13 +117,14 @@ PamchipData_STK <- function(dataset) {
     t %>%
     tibble::as_tibble() %>%
     dplyr::mutate(dummy = "dummy",
-      sample = str_c("S", stringr::str_pad(seq_along(.data$dummy), 5, pad = "0"))) %>%
+                  sample = str_c("S", stringr::str_pad(seq_along(.data$dummy), 5, pad = "0"))) %>%
     dplyr::select(-.data$dummy) %>%
     dplyr::select(.data$sample, everything())
 
   # Process Positive Control Data
 
-  PositiveControlData <- readr::read_tsv(sample_data, col_names = F) %>%
+  PositiveControlData <-
+    readr::read_tsv(sample_data, col_names = F) %>%
     dplyr::select(-.data$X2) %>%
     filter(str_detect(.data$X1, "^p")) %>%
     tibble::column_to_rownames("X1") %>%
@@ -134,18 +140,19 @@ PamchipData_STK <- function(dataset) {
 
   # Create a new object
 
-  chipdata <- new("PamchipData-STK",
-                  BioNavigatorVersion = BioNavigatorVersion,
-                  ImageAnalysisDate = ImageAnalysisDate,
-                  PamGridVersion = BioNavigatorVersion,
-                  QuantitationType = QuantitationType,
-                  RefData = RefData,
-                  PositiveControlData = PositiveControlData,
-                  SampleData = SampleData,
-                  SampleCharacteristics = SampleCharacteristics,
-                  PeptideIDs = PeptideIDs,
-                  DataProcessDate = format(Sys.time(), "%a, %d %b %Y %T %Z", tz = "GMT")
-                  )
+  chipdata <- new(
+    "PamchipData-STK",
+    BioNavigatorVersion = BioNavigatorVersion,
+    ImageAnalysisDate = ImageAnalysisDate,
+    PamGridVersion = BioNavigatorVersion,
+    QuantitationType = QuantitationType,
+    RefData = RefData,
+    PositiveControlData = PositiveControlData,
+    SampleData = SampleData,
+    SampleCharacteristics = SampleCharacteristics,
+    PeptideIDs = PeptideIDs,
+    DataProcessDate = format(Sys.time(), "%a, %d %b %Y %T %Z", tz = "GMT")
+  )
 
   chipdata
 

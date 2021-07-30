@@ -11,7 +11,6 @@
 #' @examples
 #' TRUE
 kinnet_shd <- function(reference, comparison) {
-
   pair <- equalize_kinase_graphs(reference, comparison)
 
   res <- bnlearn::shd(pair$reference, pair$comparison)
@@ -32,7 +31,6 @@ kinnet_shd <- function(reference, comparison) {
 #' @examples
 #' TRUE
 kinnet_hamming <- function(reference, comparison) {
-
   pair <- equalize_kinase_graphs(reference, comparison)
 
   res <- bnlearn::hamming(pair$reference, pair$comparison)
@@ -54,14 +52,13 @@ kinnet_hamming <- function(reference, comparison) {
 #' @examples
 #' TRUE
 kinnet_normalized_shd <- function(reference, comparison) {
-
   pair <- equalize_kinase_graphs(reference, comparison)
 
   shd <- bnlearn::shd(pair$reference, pair$comparison)
 
   arcnum <- map_dbl(pair, narcs) %>% sum
 
-  norm_shd <-round(shd/arcnum, 5)
+  norm_shd <- round(shd / arcnum, 5)
 
   norm_shd
 }
@@ -80,15 +77,13 @@ kinnet_normalized_shd <- function(reference, comparison) {
 #' @examples
 #' TRUE
 kinnet_normalized_hamming <- function(reference, comparison) {
-
   pair <- equalize_kinase_graphs(reference, comparison)
 
   hamming <- bnlearn::shd(pair$reference, pair$comparison)
 
   arcnum <- map_dbl(pair, narcs) %>% sum
 
-  norm_hamming <-round(shd/arcnum, 5)
+  norm_hamming <- round(shd / arcnum, 5)
 
   norm_hamming
 }
-

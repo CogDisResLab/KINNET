@@ -4,12 +4,14 @@
 \alias{assign_kinases}
 \title{Assign kinases, given a network and a chip type}
 \usage{
-assign_kinases(network, chiptype)
+assign_kinases(network, chiptype, identifier = "Gene_Symbol")
 }
 \arguments{
 \item{network}{A network output from bnlearn}
 
 \item{chiptype}{Either PTK or STK}
+
+\item{identifier}{The identifier to use in outputs. Can be either "Gene_Symbol" or "Kinase"}
 }
 \value{
 A dataframe with upstream kinases assigned to the peptide

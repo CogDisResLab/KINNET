@@ -12,12 +12,15 @@
 #' @examples
 #' TRUE
 equalize_kinase_graphs <- function(reference, comparison) {
-  ref_kinased <- render_reduced_kinased_graph(reference, title = "Reference")
+  ref_kinased <-
+    render_reduced_kinased_graph(reference, title = "Reference")
   ref_bnnet <- ref_kinased$bnnet
-  comp_kinased <- render_reduced_kinased_graph(comparison, title = "Comparison")
+  comp_kinased <-
+    render_reduced_kinased_graph(comparison, title = "Comparison")
   comp_bnnet <- comp_kinased$bnnet
 
-  all_nodes <- unique(c(bnlearn::nodes(ref_bnnet), bnlearn::nodes(comp_bnnet)))
+  all_nodes <-
+    unique(c(bnlearn::nodes(ref_bnnet), bnlearn::nodes(comp_bnnet)))
 
   ref_bnnet_augmented <- ref_bnnet
   for (node in all_nodes) {
@@ -29,10 +32,8 @@ equalize_kinase_graphs <- function(reference, comparison) {
     comp_bnnet_augmented <- safely_add_node(comp_bnnet_augmented, node)
   }
 
-  out <- list(
-    reference = ref_bnnet_augmented,
-    comparison = comp_bnnet_augmented
-  )
+  out <- list(reference = ref_bnnet_augmented,
+              comparison = comp_bnnet_augmented)
 
   out
 }

@@ -4,12 +4,14 @@
 \alias{update_probability_matrix}
 \title{Calculated Updated Probabilities of each peptide/kinase pair}
 \usage{
-update_probability_matrix(chiptype, assignment_df)
+update_probability_matrix(chiptype, assignment_df, identifier = "Gene_Symbol")
 }
 \arguments{
 \item{chiptype}{character. Either "STK" or "PTK"}
 
 \item{assignment_df}{tbl_df. A tibble with the potential kianse assignments}
+
+\item{identifier}{The identifier to use in outputs. Can be either "Gene_Symbol" or "Kinase"}
 }
 \value{
 an updated dataframe with the probabilities
