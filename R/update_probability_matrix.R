@@ -72,7 +72,7 @@ generate_posterior_probability_df <-
       dplyr::select(.data$ID, .data[[identifier]]) %>%
       dplyr::rename(peptide = .data$ID,
                     kinase = .data[[identifier]]) %>%
-      purrr::pmap_dfr(~ posterior(..1, ..2, probability_df))
+      purrr::pmap_dfr( ~ posterior(..1, ..2, probability_df))
 
     posterior_probs
   }
@@ -93,22 +93,34 @@ generate_posterior_probability_df <-
 #' @examples
 #' TRUE
 update_probability_matrix <-
-  function(chiptype, assignment_df, identifier = "Gene_Symbol") {
+  function(chiptype, assignment_df, identifier = "Gene_Symbol", guided = NULL) {
     if (!chiptype %in% c("PTK", "STK")) {
       stop("Incorrect Chip Type specified")
     }
 
-    annotation_posterior <- case_when(
-      chiptype == "PTK" & identifier == "Gene_Symbol" ~ ptk_probability_matrix_gene,
-      chiptype == "PTK" & identifier == "Kinase" ~ ptk_probability_matrix_kinase,
-      chiptype == "STK" & identifier == "Gene_Symbol" ~ stk_probability_matrix_gene,
-      chiptype == "STK" & identifier == "Kinase" ~ stk_probability_matrix_kinase,
-      TRUE ~ stop("Invalid Chip or Identifier Specified.\nPlease see documentation.")
-    )
+    if (chiptype == "PTK") {
+      if (identifier == "Gene_Symbol") {
+        annotation_posterior <- ptk_probability_matrix_gene
+      } else if (identifier == "Kinase") {
+        annotation_posterior <- ptk_probability_matrix_kinase
+      } else {
+        stop("Invalid identifier")
+      }
+    } else if (chiptype == "STK") {
+      if (identifier == "Gene_Symbol") {
+        annotation_posterior <- stk_probability_matrix_gene
+      } else if (identifier == "Kinase") {
+        annotation_posterior <- stk_probability_matrix_kinase
+      } else {
+        stop("Invalid identifier")
+      }
+    } else {
+      stop("Invalid chiptype")
+    }
 
 
     assignment_posterior <-
-      generate_posterior_probability_df(assignment_df)
+      generate_posterior_probability_df(assignment_df, identifier)
 
     updated_df <- dplyr::inner_join(
       assignment_posterior,
@@ -117,10 +129,11 @@ update_probability_matrix <-
       suffix = c(".assigned", ".reference")
     ) %>%
       mutate(
+        posterior.assigned = if_else(kinase %in% guided, posterior.assigned * 1000, posterior.assigned),
         foldchange = .data$posterior.assigned / .data$posterior.reference,
         log.assigned = log10(.data$posterior.assigned),
         log.reference = log10(.data$posterior.reference),
-        logged.foldchange = .data$log.assigned - .data$log.reference
+        logged.foldchange = .data$log.reference - .data$log.assigned
       )
 
     updated_df
