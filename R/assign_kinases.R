@@ -217,9 +217,17 @@ assign_kinases <-
       annotation <- ptk_annotation
     } else if (chiptype == "STK") {
       annotation <- stk_annotation
+    } else {
+      stop("Invalid Chip Specified.\nPlease choose between STK and PTK.")
     }
 
-    interactome <- kinase_interactome
+    if (identifier == "Gene_Symbol") {
+      interactome <- kinase_interactome_gene
+    } else if (identifier == "Kinase" ) {
+      interactome <- kinase_interactome_kinase
+    } else {
+      stop("Invalid Identifier Specified.\nPlease choose between Kinase and Gene_Symbol")
+    }
 
     # Load and filter appropriate data
     subset_kinase_annotation <- annotation %>%
@@ -227,8 +235,8 @@ assign_kinases <-
 
     subset_interactome <- interactome %>%
       dplyr::filter(
-        .data$from %in% subset_kinase_annotation$Gene_Symbol |
-          .data$to %in% subset_kinase_annotation$Gene_Symbol
+        .data$from %in% subset_kinase_annotation[[identifier]] |
+          .data$to %in% subset_kinase_annotation[[identifier]]
       )
 
 
