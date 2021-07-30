@@ -269,10 +269,14 @@ assign_kinases <-
       purrr::map_dfr(names(kinase_assignment), function(x)
         tidyr::expand_grid(peptide = x, kinase  = kinase_assignment[[x]])) %>%
       dplyr::rename(ID = .data$peptide,
-                    Gene_Symbol = .data$kinase)
+                    {
+                      {
+                        identifier
+                      }
+                    } := .data$kinase)
 
     updated_probabilities <-
-      update_probability_matrix(chiptype, kinase_assignment_df)
+      update_probability_matrix(chiptype, kinase_assignment_df, identifier)
 
     mapped_kinases <- updated_probabilities %>%
       dplyr::group_by(.data$peptide) %>%
@@ -286,4 +290,132 @@ assign_kinases <-
     )
 
     out
+  }
+
+#' Assign kinases, given a network and a chip type
+#'
+#' @param network A network output from bnlearn
+#' @param chiptype Either PTK or STK
+#' @param identifier The identifier to use in outputs. Can be either "Gene_Symbol" or "Kinase"
+#' @param guided A vector of Kinases or Gene_Symbols that must be included in the network. The vector must be aligned with what was specified in _identifier_
+#'
+#' @return A dataframe with upstream kinases assigned to the peptide
+#' @export
+#'
+#' @import dplyr bnlearn purrr tidyr
+#' @importFrom utils data
+#'
+#' @examples
+#' TRUE
+assign_kinases_guided <-
+  function(network,
+           chiptype,
+           identifier = "Gene_Symbol",
+           guided = NULL) {
+    if (is.null(guided)) {
+      assign_kinases(network, chiptype, identifier)
+    } else {
+      # Assign the appropriate annotation
+      if (!chiptype %in% c("PTK", "STK")) {
+        stop("Incorrect Chip Type specified")
+      }
+
+      if (chiptype == "PTK") {
+        annotation <- ptk_annotation
+      } else if (chiptype == "STK") {
+        annotation <- stk_annotation
+      } else {
+        stop("Invalid Chip Specified.\nPlease choose between STK and PTK.")
+      }
+
+      if (identifier == "Gene_Symbol") {
+        interactome <- kinase_interactome_gene
+      } else if (identifier == "Kinase") {
+        interactome <- kinase_interactome_kinase
+      } else {
+        stop("Invalid Identifier Specified.\nPlease choose between Kinase and Gene_Symbol")
+      }
+
+      # Load and filter appropriate data
+      subset_kinase_annotation <- annotation %>%
+        dplyr::filter(.data$ID %in% unique(bnlearn::arcs(network)))
+
+      subset_interactome <- interactome %>%
+        dplyr::filter(
+          .data$from %in% subset_kinase_annotation[[identifier]] |
+            .data$to %in% subset_kinase_annotation[[identifier]]
+        )
+
+
+
+      # Get the arcs and the unique peptides
+      network_arcs <- bnlearn::arcs(network)
+      network_peptides <- unique(c(network_arcs))
+      names(network_peptides) <- network_peptides
+
+      triad_links <- generate_triad_links(network_arcs, network)
+
+      # Generate a list of all possible kinases
+      assigned_links <-
+        purrr::pmap(
+          triad_links,
+          process_parent_child_link,
+          kinase_annotation = subset_kinase_annotation,
+          interactome = subset_interactome,
+          identifier = identifier
+        )
+
+
+
+      # Assign Kinases
+      kinase_assignment_sudoku <-
+        purrr::map(network_peptides,
+                   ~ candidate_kinases(.x, triad_links, assigned_links))
+
+      kinase_assignment_fixed <-
+        purrr::map(
+          network_peptides,
+          ~ filter(
+            subset_kinase_annotation,
+            ID == .x,
+            subset_kinase_annotation[[identifier]] %in% guided
+          )
+        ) %>%
+        purrr::map( ~ pull(.x, identifier))
+
+      kinase_assignment <- map2(kinase_assignment_sudoku,
+                                kinase_assignment_fixed,
+                                c)
+
+
+
+      # Generate a DF
+      kinase_assignment_df <-
+        purrr::map_dfr(names(kinase_assignment), function(x)
+          tidyr::expand_grid(peptide = x, kinase  = kinase_assignment[[x]])) %>%
+        dplyr::rename(ID = .data$peptide,
+                      {
+                        {
+                          identifier
+                        }
+                      } := .data$kinase) %>%
+        unique()
+
+      updated_probabilities <-
+        update_probability_matrix(chiptype, kinase_assignment_df, identifier)
+
+      mapped_kinases <- updated_probabilities %>%
+        dplyr::group_by(.data$peptide) %>%
+        dplyr::filter(if_else(kinase %in% guided, TRUE, logged.foldchange == min(logged.foldchange))) %>%
+        dplyr::slice_head(n = 1)
+
+      out <- list(
+        net = network,
+        probability_df = updated_probabilities,
+        kinase_assignment = kinase_assignment_df,
+        mapped_kinases = mapped_kinases
+      )
+
+      out
+    }
   }
