@@ -98,21 +98,13 @@ update_probability_matrix <-
       stop("Incorrect Chip Type specified")
     }
 
-    if (chiptype == "PTK") {
-      annotation_posterior <- ptk_probability_matrix
-    } else if (chiptype == "STK") {
-      annotation_posterior <- stk_probability_matrix
-    } else {
-      stop("Invalid Chip Specified.\nPlease choose between STK and PTK.")
-    }
-
-    if (identifier == "Gene_Symbol") {
-      interactome <- kinase_interactome_gene
-    } else if (identifier == "Kinase") {
-      interactome <- kinase_interactome_kinase
-    } else {
-      stop("Invalid Identifier Specified.\nPlease choose between Kinase and Gene_Symbol")
-    }
+    annotation_posterior <- case_when(
+      chiptype == "PTK" & identifier == "Gene_Symbol" ~ ptk_probability_matrix_gene,
+      chiptype == "PTK" & identifier == "Kinase" ~ ptk_probability_matrix_kinase,
+      chiptype == "STK" & identifier == "Gene_Symbol" ~ stk_probability_matrix_gene,
+      chiptype == "STK" & identifier == "Kinase" ~ stk_probability_matrix_kinase,
+      TRUE ~ stop("Invalid Chip or Identifier Specified.\nPlease see documentation.")
+    )
 
 
     assignment_posterior <-
