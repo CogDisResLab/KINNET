@@ -34,11 +34,11 @@ posterior <- function(peptide, kinase, probability_dataset) {
 #' @keywords internal
 #' @examples
 #' TRUE
-generate_probability_matrix <- function(annotated_df) {
+generate_probability_matrix <- function(annotated_df, identifier) {
   probability_matrix <- annotated_df %>%
-    dplyr::select(.data$ID, .data$Gene_Symbol) %>%
+    dplyr::select(.data$ID, .data[[identifier]]) %>%
     dplyr::mutate(value = 1) %>%
-    tidyr::pivot_wider(names_from = .data$Gene_Symbol) %>%
+    tidyr::pivot_wider(names_from = .data[[identifier]]) %>%
     tibble::column_to_rownames("ID") %>%
     as.matrix()
 
@@ -60,14 +60,14 @@ generate_probability_matrix <- function(annotated_df) {
 #' @keywords internal
 #' @examples
 #' TRUE
-generate_posterior_probability_df <- function(annotated_df) {
+generate_posterior_probability_df <- function(annotated_df, identifier = "Gene_Symbol") {
 
-  probability_df <- generate_probability_matrix(annotated_df)
+  probability_df <- generate_probability_matrix(annotated_df, identifier)
 
   posterior_probs <- annotated_df %>%
-    dplyr::select(.data$ID, .data$Gene_Symbol) %>%
+    dplyr::select(.data$ID, .data[[identifier]]) %>%
     dplyr::rename(peptide = .data$ID,
-                  kinase = .data$Gene_Symbol) %>%
+                  kinase = .data[[identifier]]) %>%
     purrr::pmap_dfr(~ posterior(..1, ..2, probability_df))
 
   posterior_probs
