@@ -41,7 +41,7 @@ default_children <- function(x, n) {
 #' @examples
 #' TRUE
 generate_triad_links <- function(arcs, net) {
-  triad_links <- arcs %>% purrr::map_dfr(~ expand_grid(
+  triad_links <- arcs %>% purrr::map_dfr( ~ expand_grid(
     parent = default_parent(net, .x),
     node = .x,
     child = default_children(net, .x)
@@ -66,90 +66,89 @@ generate_triad_links <- function(arcs, net) {
 #'
 #' @examples
 #' TRUE
-process_parent_child_link <- function(parent, node, child, kinase_annotation, interactome) {
-  if (!is.na(parent) & !is.na(child)) {
-    parent_linked <- kinase_annotation %>%
-      dplyr::filter(.data$ID == parent) %>%
-      dplyr::pull(.data$Gene_Symbol)
+process_parent_child_link <-
+  function(parent,
+           node,
+           child,
+           kinase_annotation,
+           interactome,
+           identifier) {
+    if (!is.na(parent) & !is.na(child)) {
+      parent_linked <- kinase_annotation %>%
+        dplyr::filter(.data$ID == parent) %>%
+        dplyr::pull(.data[[identifier]])
 
-    node_linked <- kinase_annotation %>%
-      dplyr::filter(.data$ID == node) %>%
-      dplyr::pull(.data$Gene_Symbol)
+      node_linked <- kinase_annotation %>%
+        dplyr::filter(.data$ID == node) %>%
+        dplyr::pull(.data[[identifier]])
 
-    child_linked <- kinase_annotation %>%
-      dplyr::filter(.data$ID == child) %>%
-      dplyr::pull(.data$Gene_Symbol)
+      child_linked <- kinase_annotation %>%
+        dplyr::filter(.data$ID == child) %>%
+        dplyr::pull(.data[[identifier]])
 
-    expanded_pn <- expand.grid(
-      from = parent_linked,
-      to = node_linked
-    ) %>% tibble::as_tibble()
+      expanded_pn <- expand.grid(from = parent_linked,
+                                 to = node_linked) %>% tibble::as_tibble()
 
-    expanded_nc <- expand.grid(
-      from = node_linked,
-      to = child_linked
-    ) %>% tibble::as_tibble()
+      expanded_nc <- expand.grid(from = node_linked,
+                                 to = child_linked) %>% tibble::as_tibble()
 
-    filtered_pn <- dplyr::intersect(expanded_pn, interactome) %>%
-      dplyr::rename(parent = .data$from,
-                    node = .data$to)
-    filtered_nc <- dplyr::intersect(expanded_nc, interactome) %>%
-      dplyr::rename(node = .data$from,
-                    child = .data$to)
+      filtered_pn <- dplyr::intersect(expanded_pn, interactome) %>%
+        dplyr::rename(parent = .data$from,
+                      node = .data$to)
+      filtered_nc <- dplyr::intersect(expanded_nc, interactome) %>%
+        dplyr::rename(node = .data$from,
+                      child = .data$to)
 
-    filtered_links <- dplyr::inner_join(filtered_pn, filtered_nc, by = "node")
-    filtered_links
-  } else if (is.na(parent) & !is.na(child)) {
-    parent_linked <- NA
+      filtered_links <-
+        dplyr::inner_join(filtered_pn, filtered_nc, by = "node")
+      filtered_links
+    } else if (is.na(parent) & !is.na(child)) {
+      parent_linked <- NA
 
-    node_linked <- kinase_annotation %>%
-      dplyr::filter(.data$ID == node) %>%
-      dplyr::pull(.data$Gene_Symbol)
+      node_linked <- kinase_annotation %>%
+        dplyr::filter(.data$ID == node) %>%
+        dplyr::pull(.data[[identifier]])
 
-    child_linked <- kinase_annotation %>%
-      dplyr::filter(.data$ID == child) %>%
-      dplyr::pull(.data$Gene_Symbol)
+      child_linked <- kinase_annotation %>%
+        dplyr::filter(.data$ID == child) %>%
+        dplyr::pull(.data[[identifier]])
 
-    expanded_nc <- expand.grid(
-      from = node_linked,
-      to = child_linked
-    ) %>% tibble::as_tibble()
+      expanded_nc <- expand.grid(from = node_linked,
+                                 to = child_linked) %>% tibble::as_tibble()
 
-    filtered_nc <- dplyr::intersect(expanded_nc, interactome) %>%
-      dplyr::rename(node = .data$from,
-                    child = .data$to) %>%
-      dplyr::mutate(parent = NA) %>%
-      dplyr::select(.data$parent, .data$node, .data$child)
+      filtered_nc <- dplyr::intersect(expanded_nc, interactome) %>%
+        dplyr::rename(node = .data$from,
+                      child = .data$to) %>%
+        dplyr::mutate(parent = NA) %>%
+        dplyr::select(.data$parent, .data$node, .data$child)
 
-    filtered_links <- filtered_nc
-    filtered_links
-  } else {
-    parent_linked <- kinase_annotation %>%
-      dplyr::filter(.data$ID == parent) %>%
-      dplyr::pull(.data$Gene_Symbol)
+      filtered_links <- filtered_nc
+      filtered_links
+    } else {
+      parent_linked <- kinase_annotation %>%
+        dplyr::filter(.data$ID == parent) %>%
+        dplyr::pull(.data[[identifier]])
 
-    node_linked <- kinase_annotation %>%
-      dplyr::filter(.data$ID == node) %>%
-      dplyr::pull(.data$Gene_Symbol)
+      node_linked <- kinase_annotation %>%
+        dplyr::filter(.data$ID == node) %>%
+        dplyr::pull(.data[[identifier]])
 
-    child_linked <- NA
+      child_linked <- NA
 
-    expanded_pn <- expand.grid(
-      from = parent_linked,
-      to = node_linked
-    ) %>% tibble::as_tibble()
+      expanded_pn <- expand.grid(from = parent_linked,
+                                 to = node_linked) %>% tibble::as_tibble()
 
-    filtered_pn <- dplyr::intersect(expanded_pn, interactome) %>%
-      dplyr::rename(parent = .data$from,
-                    node = .data$to) %>%
-      dplyr::mutate(child = NA) %>%
-      dplyr::select(.data$parent, .data$node, .data$child)
+      filtered_pn <- dplyr::intersect(expanded_pn, interactome) %>%
+        dplyr::rename(parent = .data$from,
+                      node = .data$to) %>%
+        dplyr::mutate(child = NA) %>%
+        dplyr::select(.data$parent, .data$node, .data$child)
 
-    filtered_links <- filtered_pn
-    filtered_links
+      filtered_links <- filtered_pn
+      filtered_links
+    }
+
   }
-
-}
 
 #' Generate Intersections between kinases
 #'
@@ -180,14 +179,17 @@ get_intersections <- function(row, column, assigned_kinases) {
 candidate_kinases <- function(peptide, arcs, assigned_kinases) {
   arcs %>%
     rownames_to_column("row") %>%
-    filter(peptide == .data$parent | peptide == .data$node | peptide == .data$child) %>%
-    mutate(column = case_when(
-      peptide == .data$parent ~ "parent",
-      peptide == .data$node ~ "node",
-      peptide == .data$child ~ "child"
-    )) %>%
+    filter(peptide == .data$parent |
+             peptide == .data$node | peptide == .data$child) %>%
+    mutate(
+      column = case_when(
+        peptide == .data$parent ~ "parent",
+        peptide == .data$node ~ "node",
+        peptide == .data$child ~ "child"
+      )
+    ) %>%
     select(.data$row, .data$column) %>%
-    purrr::pmap(~ get_intersections(..1, ..2, assigned_kinases)) %>%
+    purrr::pmap( ~ get_intersections(..1, ..2, assigned_kinases)) %>%
     purrr::reduce(intersect)
 }
 
@@ -204,65 +206,75 @@ candidate_kinases <- function(peptide, arcs, assigned_kinases) {
 #'
 #' @examples
 #' TRUE
-assign_kinases <- function(network, chiptype) {
+assign_kinases <-
+  function(network, chiptype, identifier = "Gene_Symbol") {
+    # Assign the appropriate annotation
+    if (!chiptype %in% c("PTK", "STK")) {
+      stop("Incorrect Chip Type specified")
+    }
 
-  # Assign the appropriate annotation
-  if (!chiptype %in% c("PTK", "STK")) {
-    stop("Incorrect Chip Type specified")
+    if (chiptype == "PTK") {
+      annotation <- ptk_annotation
+    } else if (chiptype == "STK") {
+      annotation <- stk_annotation
+    }
+
+    interactome <- kinase_interactome
+
+    # Load and filter appropriate data
+    subset_kinase_annotation <- annotation %>%
+      dplyr::filter(.data$ID %in% unique(bnlearn::arcs(network)))
+
+    subset_interactome <- interactome %>%
+      dplyr::filter(
+        .data$from %in% subset_kinase_annotation$Gene_Symbol |
+          .data$to %in% subset_kinase_annotation$Gene_Symbol
+      )
+
+
+
+    # Get the arcs and the unique peptides
+    network_arcs <- bnlearn::arcs(network)
+    network_peptides <- unique(c(network_arcs))
+    names(network_peptides) <- network_peptides
+
+    triad_links <- generate_triad_links(network_arcs, network)
+
+    # Generate a list of all possible kinases
+    assigned_links <-
+      purrr::pmap(
+        triad_links,
+        process_parent_child_link,
+        kinase_annotation = subset_kinase_annotation,
+        interactome = subset_interactome,
+        identifier = identifier
+      )
+
+    # Assign Kinases
+    kinase_assignment <-
+      purrr::map(network_peptides,
+                 ~ candidate_kinases(.x, triad_links, assigned_links))
+
+    # Generate a DF
+    kinase_assignment_df <-
+      purrr::map_dfr(names(kinase_assignment), function(x)
+        tidyr::expand_grid(peptide = x, kinase  = kinase_assignment[[x]])) %>%
+      dplyr::rename(ID = .data$peptide,
+                    Gene_Symbol = .data$kinase)
+
+    updated_probabilities <-
+      update_probability_matrix(chiptype, kinase_assignment_df)
+
+    mapped_kinases <- updated_probabilities %>%
+      dplyr::group_by(.data$peptide) %>%
+      dplyr::filter(.data$logged.foldchange == max(.data$logged.foldchange))
+
+    out <- list(
+      net = network,
+      probability_df = updated_probabilities,
+      kinase_assignment = kinase_assignment_df,
+      mapped_kinases = mapped_kinases
+    )
+
+    out
   }
-
-  if (chiptype == "PTK") {
-    annotation <- ptk_annotation
-  } else if (chiptype == "STK") {
-    annotation <- stk_annotation
-  }
-
-  interactome <- kinase_interactome
-
-  # Load and filter appropriate data
-  subset_kinase_annotation <- annotation %>%
-    dplyr::filter(.data$ID %in% unique(bnlearn::arcs(network)))
-
-  subset_interactome <- interactome %>%
-    dplyr::filter(.data$from %in% subset_kinase_annotation$Gene_Symbol |
-                    .data$to %in% subset_kinase_annotation$Gene_Symbol)
-
-
-
-  # Get the arcs and the unique peptides
-  network_arcs <- bnlearn::arcs(network)
-  network_peptides <- unique(c(network_arcs))
-  names(network_peptides) <- network_peptides
-
-  triad_links <- generate_triad_links(network_arcs, network)
-
-  # Generate a list of all possible kinases
-  assigned_links <- purrr::pmap(triad_links, process_parent_child_link,
-                                kinase_annotation = subset_kinase_annotation,
-                                interactome = subset_interactome)
-
-  # Assign Kinases
-  kinase_assignment <- purrr::map(network_peptides, ~ candidate_kinases(.x, triad_links, assigned_links))
-
-  # Generate a DF
-  kinase_assignment_df <-
-    purrr::map_dfr(names(kinase_assignment), function(x)
-      tidyr::expand_grid(peptide = x, kinase  = kinase_assignment[[x]])) %>%
-    dplyr::rename(ID = .data$peptide,
-                  Gene_Symbol = .data$kinase)
-
-  updated_probabilities <- update_probability_matrix(chiptype, kinase_assignment_df)
-
-  mapped_kinases <- updated_probabilities %>%
-    dplyr::group_by(.data$peptide) %>%
-    dplyr::filter(.data$logged.foldchange == max(.data$logged.foldchange))
-
-  out <- list(
-    net = network,
-    probability_df = updated_probabilities,
-    kinase_assignment = kinase_assignment_df,
-    mapped_kinases = mapped_kinases
-  )
-
-  out
-}
