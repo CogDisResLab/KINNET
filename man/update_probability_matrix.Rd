@@ -4,7 +4,12 @@
 \alias{update_probability_matrix}
 \title{Calculated Updated Probabilities of each peptide/kinase pair}
 \usage{
-update_probability_matrix(chiptype, assignment_df, identifier = "Gene_Symbol")
+update_probability_matrix(
+  chiptype,
+  assignment_df,
+  identifier = "Gene_Symbol",
+  guided = NULL
+)
 }
 \arguments{
 \item{chiptype}{character. Either "STK" or "PTK"}

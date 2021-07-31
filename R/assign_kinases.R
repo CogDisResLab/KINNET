@@ -292,7 +292,7 @@ assign_kinases <-
     out
   }
 
-#' Assign kinases, given a network and a chip type
+#' Assign kinases, given a network and a chip type and additional essential kinases
 #'
 #' @param network A network output from bnlearn
 #' @param chiptype Either PTK or STK

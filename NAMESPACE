@@ -3,6 +3,7 @@
 export(PamchipData_PTK)
 export(PamchipData_STK)
 export(assign_kinases)
+export(assign_kinases_guided)
 export(classes)
 export(compare_kinased_graphs)
 export(equalize_kinase_graphs)
