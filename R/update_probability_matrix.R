@@ -82,6 +82,7 @@ generate_posterior_probability_df <-
 #' @param chiptype character. Either "STK" or "PTK"
 #' @param assignment_df tbl_df. A tibble with the potential kianse assignments
 #' @param identifier The identifier to use in outputs. Can be either "Gene_Symbol" or "Kinase"
+#' @param guided A vector of Kinases or Gene_Symbols that must be included in the network. The vector must be aligned with what was specified in _identifier_
 #'
 #' @return an updated dataframe with the probabilities
 #' @export
@@ -129,7 +130,7 @@ update_probability_matrix <-
       suffix = c(".assigned", ".reference")
     ) %>%
       mutate(
-        posterior.assigned = if_else(kinase %in% guided, posterior.assigned * 1000, posterior.assigned),
+        posterior.assigned = if_else(.data$kinase %in% guided, .data$posterior.assigned * 1000, .data$posterior.assigned),
         foldchange = .data$posterior.assigned / .data$posterior.reference,
         log.assigned = log10(.data$posterior.assigned),
         log.reference = log10(.data$posterior.reference),

@@ -17,6 +17,8 @@ update_probability_matrix(
 \item{assignment_df}{tbl_df. A tibble with the potential kianse assignments}
 
 \item{identifier}{The identifier to use in outputs. Can be either "Gene_Symbol" or "Kinase"}
+
+\item{guided}{A vector of Kinases or Gene_Symbols that must be included in the network. The vector must be aligned with what was specified in _identifier_}
 }
 \value{
 an updated dataframe with the probabilities
