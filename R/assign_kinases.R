@@ -204,6 +204,7 @@ candidate_kinases <- function(peptide, arcs, assigned_kinases) {
 #'
 #' @import dplyr bnlearn purrr tidyr
 #' @importFrom utils data
+#' @importFrom rlang :=
 #'
 #' @examples
 #' TRUE
@@ -304,6 +305,7 @@ assign_kinases <-
 #'
 #' @import dplyr bnlearn purrr tidyr
 #' @importFrom utils data
+#' @importFrom rlang :=
 #'
 #' @examples
 #' TRUE
@@ -406,7 +408,7 @@ assign_kinases_guided <-
 
       mapped_kinases <- updated_probabilities %>%
         dplyr::group_by(.data$peptide) %>%
-        dplyr::filter(if_else(kinase %in% guided, TRUE, logged.foldchange == min(logged.foldchange))) %>%
+        dplyr::filter(if_else(.data$kinase %in% guided, TRUE, .data$logged.foldchange == min(.data$logged.foldchange))) %>%
         dplyr::slice_head(n = 1)
 
       out <- list(
