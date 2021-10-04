@@ -78,7 +78,7 @@ filter_peptides <- function(chipdata, threshold = 0.75) {
                   .data$std_200 > threshold) %>%
     dplyr::summarise(n = n()) %>%
     dplyr::ungroup() %>%
-    dplyr::filter(.data$n == nreplicates) %>%
+    dplyr::filter(.data$n >= nreplicates/2) %>%
     dplyr::group_by(class) %>%
     dplyr::group_split() %>%
     purrr::map( ~ dplyr::pull(.x, .data$peptide)) %>%
