@@ -64,7 +64,7 @@ PamchipData_PTK <- function(dataset) {
 
   # Read and split data
   input_data <- readLines(dataset, warn = F, encoding = "UTF-8")
-  id_line <- which(stringr::str_detect(input_data, "ID"))
+  id_line <- max(which(stringr::str_detect(input_data, "ID")))
   ref_end <- max(which(stringr::str_detect(input_data, "REF")))
   metadata_line <- stringr::str_c(input_data[1], "\n")
   characteristic_data <-
