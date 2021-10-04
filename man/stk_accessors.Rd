@@ -3,12 +3,12 @@
 \name{stk_accessors}
 \alias{stk_accessors}
 \alias{pheno_data}
-\alias{pheno_data,PamchipData-STK-method}
 \alias{exp_data}
-\alias{exp_data,PamchipData-STK-method}
 \alias{classes}
-\alias{classes,PamchipData-STK-method}
 \alias{peptides}
+\alias{pheno_data,PamchipData-STK-method}
+\alias{exp_data,PamchipData-STK-method}
+\alias{classes,PamchipData-STK-method}
 \alias{peptides,PamchipData-STK-method}
 \title{STK Data Accessor Functions}
 \usage{

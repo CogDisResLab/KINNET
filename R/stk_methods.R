@@ -36,6 +36,8 @@ setMethod(
 #' @param chipdata an object of class PamchipData-STK or PamchipData-PTK
 #' @param ... Currently unused
 #'
+#' @aliases pheno_data exp_data classes peptides
+#'
 #' @return The requested object
 #'
 #' @name stk_accessors
@@ -45,12 +47,16 @@ NULL
 #' @export
 #' @rdname stk_accessors
 #'
+#' @aliases pheno_data
+#'
+#'
 setGeneric("pheno_data", function(chipdata, ...) {
   standardGeneric("pheno_data")
 })
 
 #' @export
 #' @rdname stk_accessors
+#'
 #'
 setMethod("pheno_data", "PamchipData-STK",
           function(chipdata) {
