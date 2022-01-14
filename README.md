@@ -57,7 +57,7 @@ You can install the latest development version of KINNET from [Github]()
 with:
 
 ``` r
-remotes::install_github("AliSajid/KINNET")
+remotes::install_github("CogDisResLab/KINNET")
 ```
 
 ## Example
